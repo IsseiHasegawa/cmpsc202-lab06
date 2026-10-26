@@ -1,4 +1,4 @@
-"""Solve the coin change problem using naive recursion."""
+"""Solve the coin change problem using naive recursion and memoization."""
 
 from time import perf_counter
 
@@ -21,6 +21,28 @@ def coin_change_recursive(coins, amount):
     return minimum_coins
 
 
+def coin_change_memoized(coins, amount, memo):
+    """Return the minimum coin count using cached results for each amount.
+
+    Coins must be positive integers, and amount must be a nonnegative integer.
+    Each denomination can be used any number of times. Impossible amounts are
+    cached as infinity. Use a fresh memo dictionary for a different coin set.
+    """
+    if amount == 0:
+        return 0
+    if amount in memo:
+        return memo[amount]
+
+    minimum_coins = float("inf")
+    for coin in coins:
+        if coin <= amount:
+            candidate = 1 + coin_change_memoized(coins, amount - coin, memo)
+            minimum_coins = min(minimum_coins, candidate)
+
+    memo[amount] = minimum_coins
+    return minimum_coins
+
+
 if __name__ == "__main__":
     coins = [1, 2, 5]
     amount = 11
@@ -31,5 +53,13 @@ if __name__ == "__main__":
 
     print(f"Coins: {coins}")
     print(f"Amount: {amount}")
-    print(f"Minimum number of coins: {result}")
-    print(f"Execution time: {elapsed:.6f} seconds")
+    print(f"Naive recursive minimum number of coins: {result}")
+    print(f"Naive recursive execution time: {elapsed:.6f} seconds")
+
+    memo = {}
+    start = perf_counter()
+    result = coin_change_memoized(coins, amount, memo)
+    elapsed = perf_counter() - start
+
+    print(f"Memoized minimum number of coins: {result}")
+    print(f"Memoized execution time: {elapsed:.6f} seconds")
