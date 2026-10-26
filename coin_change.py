@@ -1,4 +1,4 @@
-"""Solve the coin change problem using naive recursion and memoization."""
+"""Solve coin change using naive recursion, memoization, and tabulation."""
 
 from time import perf_counter
 
@@ -43,6 +43,24 @@ def coin_change_memoized(coins, amount, memo):
     return minimum_coins
 
 
+def coin_change_dp(coins, amount):
+    """Return the minimum coin count using bottom-up dynamic programming.
+
+    Coins must be positive integers, and amount must be a nonnegative integer.
+    Each denomination can be used any number of times. Return infinity if
+    exact change is impossible.
+    """
+    dp = [float("inf")] * (amount + 1)
+    dp[0] = 0
+
+    for i in range(1, amount + 1):
+        for coin in coins:
+            if coin <= i:
+                dp[i] = min(dp[i], dp[i - coin] + 1)
+
+    return dp[amount]
+
+
 if __name__ == "__main__":
     coins = [1, 2, 5]
     amount = 11
@@ -63,3 +81,10 @@ if __name__ == "__main__":
 
     print(f"Memoized minimum number of coins: {result}")
     print(f"Memoized execution time: {elapsed:.6f} seconds")
+
+    start = perf_counter()
+    result = coin_change_dp(coins, amount)
+    elapsed = perf_counter() - start
+
+    print(f"Bottom-up DP minimum number of coins: {result}")
+    print(f"Bottom-up DP execution time: {elapsed:.6f} seconds")
