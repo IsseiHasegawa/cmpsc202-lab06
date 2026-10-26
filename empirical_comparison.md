@@ -11,4 +11,6 @@ I compared naive recursion, top-down memoization, and bottom-up tabulation using
 | 25 | 5 | 61.558942 | 0.005238 | 0.002725 |
 | 30 | 6 | 881.741375 | 0.006266 | 0.003239 |
 
+![Runtime comparison of the three coin change approaches, with a logarithmic runtime axis in milliseconds.](empirical_comparison.png)
+
 Naive recursion became dramatically slower as the amount increased: its runtime grew from about 0.0014 ms at amount 5 to 882 ms at amount 30 because it repeatedly solves the same subproblems. Both DP approaches grew approximately linearly over these inputs, consistent with their O(kV) time complexity for k denominations and target amount V, compared with the exponential worst-case growth of naive recursion. Memoization stores subproblem results, while tabulation computes them iteratively. Bottom-up DP was faster than memoization at every measured amount in this run, consistent with avoiding recursive calls and dictionary lookups. The measurements cover small amounts and one coin set, so they demonstrate the trend rather than establish a universal speed ranking.
